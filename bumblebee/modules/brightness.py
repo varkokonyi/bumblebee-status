@@ -13,6 +13,8 @@ import bumblebee.input
 import bumblebee.output
 import bumblebee.engine
 
+import os
+
 class Module(bumblebee.engine.Module):
     def __init__(self, engine, config):
         super(Module, self).__init__(engine, config,
@@ -23,16 +25,16 @@ class Module(bumblebee.engine.Module):
         self._device_path = self.parameter("device_path", "/sys/class/backlight/intel_backlight")
         step = self.parameter("step", 2)
 
-        if bumblebee.util.which("light"):
-            engine.input.register_callback(self, button=bumblebee.input.WHEEL_UP,
-                cmd="light -A {}%".format(step))
-            engine.input.register_callback(self, button=bumblebee.input.WHEEL_DOWN,
-                cmd="light -U {}%".format(step))
-        else:
-            engine.input.register_callback(self, button=bumblebee.input.WHEEL_UP,
-                cmd="xbacklight +{}%".format(step))
-            engine.input.register_callback(self, button=bumblebee.input.WHEEL_DOWN,
-                cmd="xbacklight -{}%".format(step))
+        engine.input.register_callback(self, button=bumblebee.input.WHEEL_UP,
+            cmd=self.li_up)
+        engine.input.register_callback(self, button=bumblebee.input.WHEEL_DOWN,
+            cmd=self.li_do)
+
+    def li_up(self,_):
+        os.popen("~/.i3/scripts/light-up.sh")
+
+    def li_do(self,_):
+        os.popen("~/.i3/scripts/light-down.sh")
 
     def brightness(self, widget):
         if isinstance(self._brightness, float):
