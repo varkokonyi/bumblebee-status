@@ -31,10 +31,10 @@ class Module(bumblebee.engine.Module):
             cmd=self.li_do)
 
     def li_up(self,_):
-        os.popen("~/.i3/scripts/light-up.sh")
+        os.popen("~/.i3/script.d/light-up.sh")
 
     def li_do(self,_):
-        os.popen("~/.i3/scripts/light-down.sh")
+        os.popen("~/.i3/script.d/light-down.sh")
 
     def brightness(self, widget):
         if isinstance(self._brightness, float):
