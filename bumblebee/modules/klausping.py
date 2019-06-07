@@ -18,12 +18,19 @@ class Module(bumblebee.engine.Module):
             bumblebee.output.Widget(full_text=self.output)
         )
         engine.input.register_callback(self,button=bumblebee.input.LEFT_MOUSE, cmd=self.plause)
+        engine.input.register_callback(self,button=bumblebee.input.RIGHT_MOUSE, cmd=self.noupd)
         self._path=self.parameter("path","")
+        self._upd = True
+
+    def noupd(self, _):
+        self._upd= not self._upd
 
     def plause(self, _):
         requests.get(self._path+"ping_reset.py")
 
     def output(self, _):
+        if not self._upd:
+            return "off"
         self._out=""
         try:
             self._r = requests.get(self._path+'ping_mizu.py')
